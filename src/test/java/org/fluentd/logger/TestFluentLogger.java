@@ -36,7 +36,7 @@ public class TestFluentLogger {
                         Event e = unpacker.read(Event.class);
                         elist.add(e);
                     }
-                    //socket.close();
+                    // socket.close();
                 } catch (EOFException e) {
                     // ignore
                 }
@@ -46,6 +46,7 @@ public class TestFluentLogger {
 
         // start loggers
         FluentLogger logger = FluentLogger.getLogger("testtag", host, port);
+
         {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("k1", "v1");
@@ -95,7 +96,7 @@ public class TestFluentLogger {
                             elists[1].add(e); // testtag01
                         }
                     }
-                    //socket.close();
+                    // socket.close();
                 } catch (EOFException e) {
                     // ignore
                 }
@@ -105,7 +106,7 @@ public class TestFluentLogger {
 
         // start loggers
         FluentLogger[] loggers = new FluentLogger[2];
-        int[] counts = new int[2]; 
+        int[] counts = new int[2];
         loggers[0] = FluentLogger.getLogger("testtag00", host, port);
         {
             for (int i = 0; i < counts[0]; i++) {
