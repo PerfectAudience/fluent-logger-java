@@ -1,2 +1,4 @@
 FURUHASHI Sadayuki <frsyuki _at_ users.sourceforge.jp>
 Muga Nishizawa <muga.nishizawa _at_ gmail.com>
+Perfect Audience <tech _at_ perfectaudience.com>
+Francois Lagier <francois.lagier _at_ gmail.com>
