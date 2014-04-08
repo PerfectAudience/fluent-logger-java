@@ -1,0 +1,73 @@
+Release 0.2.11 - 2013/09/13
+  BUG FIXMES
+    Fixes RawSocketSender#connect()'s timeout
+
+Release 0.2.10 - 2013/07/10
+  IMPROVEMENTS
+    Fixes server reconnection and new Reconnector
+      https://github.com/fluent/fluent-logger-java/pull/5
+
+  BUG FIXMES
+    Fixes stack overflow at FluentLoggerFactory#getLogger(String tagPrefix, String host, int port, int timeout, int bufferCapacity)
+
+Release 0.2.9 - 2013/05/09
+  IMPROVEMENTS
+    FluentLoggerFactory.getLogger() accepts 'tag' param
+
+Release 0.2.8 - 2013/01/15
+  IMPROVEMENTS
+    Upgrades version of msgpack: 0.6.6 to 0.6.7
+
+  BUG FIXMES
+    ISSUE-3: Missing timeout initialization in RawSocketSender
+
+Release 0.2.7 - 2012/11/17
+  IMPROVEMENTS
+    Changed pom.xml for managing jar file in Sonatype repository
+
+Release 0.2.6 - 2012/11/15
+  IMPROVEMENTS
+    Added FluentLoggerFactory class for fluent-logger-scala
+
+Release 0.2.5 - 2012/07/18
+  IMPROVEMENTS
+    Upgrades version of msgpack: 0.6.4 to 0.6.6
+    Added a new logging API: FluentLogger#flush() and flushAll()
+    Renamed a logging API: FluentLogger#close() to closeAll()
+    Divides a reconnector module from a sender module
+
+Release 0.2.4 - 2012/01/30
+  NEW FEATURES
+    Adds NullSender class.
+
+  IMPROVEMENTS
+    Changes behavior of FluentLogger#close(). When the method is called,
+    all logger objects are removed.
+
+Release 0.2.3 - 2012/01/22
+  NEW FEATURES
+    Adds FluentLogger API: flush().
+
+Release 0.2.2 - 2012/01/13
+  BUG FIXMES
+    Fixes bug: wrong timestamp implementation in fluent-logger-java
+
+Release 0.2.1 - 2012/01/05
+  NEW FEATURES
+    Changes FluentLogger API: log(String, Map<String, String>) to
+    log(String, Map<String, Object>).
+
+  IMPROVEMENTS
+    Refactors some classes under org.fluentd.logger.sender package.
+    Updates version of MessagePack: 0.6.4
+
+Release 0.2.0 - 2011/10/30
+  NEW FEATURES
+    Pre-defines EventTemplate class for serialization of Event objects.
+
+  BUG FIXMES
+
+  IMPROVEMENTS
+    Change APIs: add close method in FluentLogger class
+
+Release 0.1.0 - 2011/10/18

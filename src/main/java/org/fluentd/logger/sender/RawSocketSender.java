@@ -25,8 +25,6 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
-import org.fluentd.logger.reconnector.ExponentialDelayReconnector;
-import org.fluentd.logger.reconnector.Reconnector;
 import org.msgpack.MessagePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,9 +77,8 @@ public class RawSocketSender implements Sender {
         try {
             connect();
         } catch (IOException e) {
-            LOG.error("Failed to connect fluentd: " + server.toString());
-            LOG.error("Connection will be retried");
-            e.printStackTrace();
+            LOG.error("Failed to connect fluentd: " + server.toString(), e);
+            LOG.warn("Connection will be retried");
             close();
         }
     }
@@ -89,8 +86,7 @@ public class RawSocketSender implements Sender {
     private void connect() throws IOException {
         try {
             socket = new Socket();
-            socket.connect(server);
-            socket.setSoTimeout(timeout); // the timeout value to be used in milliseconds
+            socket.connect(server, timeout);
             out = new BufferedOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             LOG.error("Unable to connect; server:{}", server);
@@ -98,10 +94,10 @@ public class RawSocketSender implements Sender {
         }
     }
 
-    private void reconnect(SenderStatus senderStatus) throws IOException {
+    private void reconnect(boolean forceReconnection) throws IOException {
         if (socket == null) {
             connect();
-        } else if (senderStatus.equals(SenderStatus.ERROR) || socket.isClosed() || (!socket.isConnected())) {
+        } else if (forceReconnection || socket.isClosed() || (!socket.isConnected())) {
             close();
             connect();
         }
@@ -147,8 +143,7 @@ public class RawSocketSender implements Sender {
             // serialize tag, timestamp and data
             bytes = msgpack.write(event);
         } catch (IOException e) {
-            LOG.error("Cannot serialize event: " + event);
-            e.printStackTrace();
+            LOG.error("Cannot serialize event: " + event, e);
             return false;
         }
 
@@ -165,7 +160,7 @@ public class RawSocketSender implements Sender {
         pendings.put(bytes);
 
         // suppress reconnection burst
-        if (!reconnector.enableReconnection()) {
+        if (!reconnector.enableReconnection(System.currentTimeMillis())) {
             return true;
         }
 
@@ -178,15 +173,14 @@ public class RawSocketSender implements Sender {
     public synchronized void flush() {
         try {
             // check whether connection is established or not
-            reconnect(reconnector.getSenderStatus());
-
+            reconnect(!reconnector.isErrorHistoryEmpty());
             // write data
             out.write(getBuffer());
             out.flush();
             clearBuffer();
             reconnector.clearErrorHistory();
         } catch (IOException e) {
-            LOG.error("Exception in flush", e);
+            LOG.error(this.getClass().getName(), "flush", e);
             reconnector.addErrorHistory(System.currentTimeMillis());
         }
     }

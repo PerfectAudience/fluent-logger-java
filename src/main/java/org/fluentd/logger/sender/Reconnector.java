@@ -15,16 +15,15 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 //
-package org.fluentd.logger.reconnector;
+package org.fluentd.logger.sender;
 
-import org.fluentd.logger.sender.SenderStatus;
 
 public interface Reconnector {
     void clearErrorHistory();
 
     void addErrorHistory(long timestamp);
 
-    SenderStatus getSenderStatus();
+    boolean isErrorHistoryEmpty();
 
-    boolean enableReconnection();
+    boolean enableReconnection(long timestamp);
 }

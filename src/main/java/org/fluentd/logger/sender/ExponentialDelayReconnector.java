@@ -1,17 +1,14 @@
-package org.fluentd.logger.reconnector;
+package org.fluentd.logger.sender;
 
-import java.util.LinkedList;
-
-import org.fluentd.logger.sender.RawSocketSender;
-import org.fluentd.logger.sender.SenderStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedList;
+
 /**
- * Calculate exponential delay for reconnecting
+ * Calcurate exponential delay for reconnecting
  */
 public class ExponentialDelayReconnector implements Reconnector {
-    private static final Logger LOG = LoggerFactory.getLogger(RawSocketSender.class);
 
     private double wait = 0.5;
 
@@ -46,17 +43,17 @@ public class ExponentialDelayReconnector implements Reconnector {
         }
     }
 
+    public boolean isErrorHistoryEmpty() {
+        return errorHistory.isEmpty();
+    }
+
     public void clearErrorHistory() {
         errorHistory.clear();
     }
 
-    public boolean enableReconnection() {
-        long nowTimestamp = System.currentTimeMillis();
+    public boolean enableReconnection(long timestamp) {
         int size = errorHistory.size();
-        if (getSenderStatus().equals(SenderStatus.OK)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("The senderStatus is OK; return true");
-            }
+        if (size == 0) {
             return true;
         }
 
@@ -66,21 +63,7 @@ public class ExponentialDelayReconnector implements Reconnector {
         } else {
             suppressSec = waitMax;
         }
-        boolean tryReconnectionBool = (!(nowTimestamp - errorHistory.getLast() < suppressSec));
-        LOG.warn(
-                "The errorHistory is NOT empty; errorHistory.size():{}, tryReconnectionBool:{}, next reconnection in: {}ms",
-                new Object[] { errorHistory.size(), tryReconnectionBool,
-                        (errorHistory.getLast() + suppressSec) - nowTimestamp });
-        return tryReconnectionBool;
-    }
 
-    @Override
-    public SenderStatus getSenderStatus() {
-        // Return OK if the errorHistory is empty
-        if (errorHistory.isEmpty()) {
-            return SenderStatus.OK;
-        }
-        return SenderStatus.ERROR;
-
+        return (!(timestamp - errorHistory.getLast() < suppressSec));
     }
 }
