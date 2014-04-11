@@ -26,7 +26,7 @@ Fluent Logger for Java is released on Fluent Maven2 repository.  You can configu
       ...
       <dependency>
         <groupId>com.perfectaudience</groupId>
-        <artifactId>pa-fluent-logger</artifactId>
+        <artifactId>fluent-logger</artifactId>
         <version>${logger.version}</version>
       </dependency>
       ...
